@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "id": "codex",
+  "authentication_endpoints": [
+    "https://auth.openai.com/",
+    "https://chatgpt.com/",
+    "https://api.openai.com/v1/models"
+  ]
+}

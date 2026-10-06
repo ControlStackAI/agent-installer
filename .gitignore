@@ -1,0 +1,10 @@
+.build/
+dist/
+__pycache__/
+*.pyc
+*.iso
+*.qcow2
+result
+result-*
+auth.json
+.env

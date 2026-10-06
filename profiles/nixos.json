@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "id": "nixos",
+  "name": "NixOS",
+  "os_ids": [
+    "nixos"
+  ],
+  "default_filesystem": "zfs",
+  "package_endpoints": [
+    "https://cache.nixos.org/"
+  ],
+  "capabilities": {
+    "live_image": true,
+    "agent_onboarding": true,
+    "physical_disk_executor": false
+  }
+}

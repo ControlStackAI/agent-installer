@@ -1,0 +1,2 @@
+#!/bin/sh
+exec bash /usr/lib/agent-installer/core/smoke.sh

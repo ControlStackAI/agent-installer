@@ -1,0 +1,60 @@
+{
+  "schema": 1,
+  "builder_image": "archlinux@sha256:4e77cf2ea5f410e6f8be5abf93ccf17ce2436e87a138c167208356711a405dbd",
+  "arch": {
+    "version": "2026.10.01",
+    "snapshot": "2026/10/05",
+    "signer": "3E80CA1A8B89F69CBA57D98A76A5EF9054449A5C",
+    "iso": {
+      "name": "archlinux-2026.10.01-x86_64.iso",
+      "url": "https://archive.archlinux.org/iso/2026.10.01/archlinux-2026.10.01-x86_64.iso",
+      "sha256": "684ded26c63240ff4a41e8c25ee84ea6da233f557364821f13d12c2b0a9059a5",
+      "signature": {
+        "name": "archlinux-2026.10.01-x86_64.iso.sig",
+        "url": "https://archive.archlinux.org/iso/2026.10.01/archlinux-2026.10.01-x86_64.iso.sig",
+        "sha256": "d58d995b99115b78dad900a0a72c44c8be2c681f8b386774a922de2a07a06510"
+      }
+    },
+    "kernel_package_version": "7.2.8.arch1-2",
+    "kernel_release": "7.2.8-arch1-2",
+    "linux": {
+      "name": "linux-7.2.8.arch1-2-x86_64.pkg.tar.zst",
+      "url": "https://archive.archlinux.org/repos/2026/10/05/core/os/x86_64/linux-7.2.8.arch1-2-x86_64.pkg.tar.zst",
+      "sha256": "99745cb20f82292d5285d9cb4307970f80844ba94d816ce6d708689d1a1895b4"
+    }
+  },
+  "codex": {
+    "version": "0.160.1",
+    "package": {
+      "name": "codex-package-x86_64-unknown-linux-musl.tar.gz",
+      "url": "https://github.com/openai/codex/releases/download/rust-v0.160.1/codex-package-x86_64-unknown-linux-musl.tar.gz",
+      "sha256": "340801565906a7028f6baaa9ab6853addaef221f0016a1417a7c1ffdd96c21f0"
+    }
+  },
+  "zfs": {
+    "version": "2.4.4",
+    "signer": "3A9917BF0DED5C13F69AC68FABEC0A1208037BE9",
+    "packages": [
+      {
+        "name": "zfs-linux-2.4.4_7.2.8.arch1.2-1-x86_64.pkg.tar.zst",
+        "url": "https://github.com/archzfs/archzfs/releases/download/experimental/zfs-linux-2.4.4_7.2.8.arch1.2-1-x86_64.pkg.tar.zst",
+        "sha256": "286ed10114cbd82ea42793a780ff59b7b4feb0d8aca66c74b08d3b61600cc692",
+        "signature": {
+          "name": "zfs-linux-2.4.4_7.2.8.arch1.2-1-x86_64.pkg.tar.zst.sig",
+          "url": "https://github.com/archzfs/archzfs/releases/download/experimental/zfs-linux-2.4.4_7.2.8.arch1.2-1-x86_64.pkg.tar.zst.sig",
+          "sha256": "c221ac6b52c1a4ea87ffe23d7c83e2903db16452f62851c95425019258ce89d2"
+        }
+      },
+      {
+        "name": "zfs-utils-2.4.4-3-x86_64.pkg.tar.zst",
+        "url": "https://github.com/archzfs/archzfs/releases/download/experimental/zfs-utils-2.4.4-3-x86_64.pkg.tar.zst",
+        "sha256": "b9d797f52b95efd8d093bd9920caf67bb0a80c01d250350308bb98b6e7b47ebb",
+        "signature": {
+          "name": "zfs-utils-2.4.4-3-x86_64.pkg.tar.zst.sig",
+          "url": "https://github.com/archzfs/archzfs/releases/download/experimental/zfs-utils-2.4.4-3-x86_64.pkg.tar.zst.sig",
+          "sha256": "892b3fa7a56f4b2ac74766ff37bba1d1e4fc7180f05fec0544e52bbfa2044729"
+        }
+      }
+    ]
+  }
+}

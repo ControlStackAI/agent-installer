@@ -1,0 +1,2 @@
+#!/bin/sh
+PYTHONPATH=/usr/lib/agent-installer exec python3 -m core.launcher --network "$@"

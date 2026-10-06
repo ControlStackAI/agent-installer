@@ -1,0 +1,15 @@
+name: Validate shared core and adapters
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - run: python3 scripts/check.py
+      - uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31
+      - run: nix eval --raw .#nixosConfigurations.live.config.system.build.isoImage.drvPath
+      - run: nix build .#installer-core .#codex --no-link --max-jobs 2 --cores 2

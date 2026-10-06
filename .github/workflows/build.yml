@@ -1,0 +1,50 @@
+name: Build and boot live image
+on:
+  workflow_dispatch:
+    inputs:
+      distro:
+        description: Distribution image
+        type: choice
+        required: true
+        options: [arch, nixos]
+permissions:
+  contents: read
+concurrency:
+  group: image-${{ inputs.distro }}-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31
+      - run: python3 scripts/check.py
+      - name: Build from locked inputs
+        env:
+          DISTRO: ${{ inputs.distro }}
+        run: python3 scripts/build.py --distro "$DISTRO" --jobs 2
+      - name: Isolated VM tools
+        run: sudo apt-get update && sudo apt-get install -y qemu-system-x86 ovmf
+      - name: BIOS and UEFI boots without host disks
+        env:
+          DISTRO: ${{ inputs.distro }}
+        run: |
+          iso=(dist/"$DISTRO"/*.iso)
+          python3 scripts/vm.py "${iso[0]}" --distro "$DISTRO" --timeout 1800
+          python3 scripts/vm.py "${iso[0]}" --distro "$DISTRO" --timeout 1800 --uefi-code /usr/share/OVMF/OVMF_CODE_4M.fd --uefi-vars /usr/share/OVMF/OVMF_VARS_4M.fd
+          cp .build/smoke/"$DISTRO"/*-result.json .build/smoke/"$DISTRO"/*.log dist/"$DISTRO"/
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: agent-${{ inputs.distro }}-${{ github.run_number }}
+          path: dist/${{ inputs.distro }}/
+          compression-level: 0
+          retention-days: 14
+      - name: Failure diagnostics
+        if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: diagnostics-${{ inputs.distro }}-${{ github.run_number }}
+          path: .build/smoke/

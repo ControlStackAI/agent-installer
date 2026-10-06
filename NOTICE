@@ -1,0 +1,7 @@
+ControlStackAI Agent Installer
+Copyright 2026 ControlStackAI contributors.
+
+This project includes integration code for independently licensed upstream
+software. Source licensing does not change the licenses of Codex, distribution
+packages, OpenZFS or other software in a generated live image. Preserve upstream
+notices and see docs/third-party.md for provenance.

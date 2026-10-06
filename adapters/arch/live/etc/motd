@@ -1,0 +1,8 @@
+ControlStackAI Arch agent installer
+
+Run agent-installer to connect to the internet and sign in to Codex.
+Subscription: device code or browser. API key: hidden input, sent on stdin.
+Credentials are stored only in the live RAM session.
+
+This is development live media. Physical installation is not qualified.
+Review /usr/share/arch-agent-installer/AGENTS.md before changing disks.

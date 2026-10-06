@@ -1,0 +1,15 @@
+[Unit]
+Description=Opt-in non-destructive live medium smoke test
+After=NetworkManager.service systemd-timesyncd.service
+Wants=NetworkManager.service systemd-timesyncd.service
+ConditionKernelCommandLine=|agent.smoke=1
+ConditionPathExists=|/sys/firmware/qemu_fw_cfg/by_name/opt/org.controlstackai/smoke/raw
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/agent-smoke-test
+StandardOutput=journal+console
+StandardError=journal+console
+
+[Install]
+WantedBy=multi-user.target
