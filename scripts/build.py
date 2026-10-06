@@ -23,6 +23,8 @@ else:
                '--no-write-lock-file', '--out-link', str(ROOT/'.build/nixos'), str(ROOT)+'#nixos-iso']
     (ROOT/'.build').mkdir(exist_ok=True)
 subprocess.run(command, check=True, cwd=ROOT)
+if args.distro == 'arch' and '--download-only' in rest:
+    raise SystemExit(0)
 
 # Give both adapters the same artifact layout for release tooling.
 output = ROOT/'dist'/args.distro
