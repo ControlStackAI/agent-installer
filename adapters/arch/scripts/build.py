@@ -47,7 +47,7 @@ def download(item, cache, reuse_root=None):
     error = None
     for url in candidate_urls(item):
         for attempt in range(3):
-            request = urllib.request.Request(url, headers={"User-Agent": "ControlStackAI-arch-agent-installer"})
+            request = urllib.request.Request(url, headers={"User-Agent": "ControlStackAI-agent-installer"})
             try:
                 with urllib.request.urlopen(request, timeout=180) as response, temporary.open("wb") as output:
                     shutil.copyfileobj(response, output)

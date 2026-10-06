@@ -1,4 +1,6 @@
-# ControlStackAI Agent Installer
+# Agent Installer
+
+[Public source: ControlStackAI/agent-installer](https://github.com/ControlStackAI/agent-installer)
 
 A local assistant to help people install or recover Linux without needing to
 learn terminal commands first. Boot a supported live image, connect to the
@@ -49,6 +51,8 @@ current image builders target x86_64 Linux. Reviewed inputs are pinned: building
 never silently resolves a new runtime, image or package snapshot.
 
 ```sh
+git clone https://github.com/ControlStackAI/agent-installer.git
+cd agent-installer
 python3 scripts/check.py
 python3 scripts/build.py --distro arch --jobs 2
 python3 scripts/build.py --distro nixos --jobs 2

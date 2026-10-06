@@ -1,5 +1,8 @@
 # Architecture and adapter contract
 
+Canonical repository: https://github.com/ControlStackAI/agent-installer .
+The earlier private arch-agent-installer repository is a historical prototype.
+
 The shared core owns a continuous local-console flow: network readiness, clock
 readiness, authentication, agent session and retry/troubleshooting. It knows no
 Arch pacman or NixOS installation commands. The runtime owns login, private

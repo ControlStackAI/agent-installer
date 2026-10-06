@@ -17,7 +17,7 @@ BUILDER = "archlinux@sha256:4e77cf2ea5f410e6f8be5abf93ccf17ce2436e87a138c1672083
 
 
 def fetch(url):
-    req = urllib.request.Request(url, headers={"User-Agent": "ControlStackAI-arch-agent-installer"})
+    req = urllib.request.Request(url, headers={"User-Agent": "ControlStackAI-agent-installer"})
     with urllib.request.urlopen(req, timeout=120) as response:
         return response.read()
 
