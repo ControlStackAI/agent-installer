@@ -24,7 +24,7 @@ echo AGENT_PREFLIGHT_PASS
 
 # Shared tests exercise offline gating, all authentication methods, private RAM
 # identity and secret transport using fixtures; never an actual owner account.
-PYTHONPATH=/usr/lib/agent-installer python -m unittest discover -s /usr/share/agent-installer/tests -v
+PYTHONPATH="${PYTHONPATH:-/usr/lib/agent-installer}" python -m unittest discover -s /usr/share/agent-installer/tests -v
 echo AGENT_LAUNCHER_FIXTURES_PASS
 
 # File-backed vdevs exist only in guest RAM. Exercise snapshot portability,
