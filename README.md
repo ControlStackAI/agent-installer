@@ -31,6 +31,22 @@ runtime describes sign-in and conversation. Keep these independent. A resident
 OpenClaw operating-system agent is a separate project, with its own persistent
 state and lifecycle. This project prepares the live installation environment.
 
+## Long-term plan
+
+- **Support more Linux distributions.** Extend the shared core with distro
+  profiles and native image builders beyond Arch and NixOS. The ambition is to
+  support potentially any Linux distribution, with installation, recovery and
+  filesystem capabilities documented and tested for each adapter.
+- **Offer a graphical installation option.** Make installation easier for
+  beginners with a guided interface for connecting to the internet, signing in,
+  talking to the local assistant and reviewing installation choices. Show clear
+  disk and data-preservation plans before asking permission to make changes,
+  and keep troubleshooting accessible.
+
+These are future goals. The current images provide console onboarding and a
+local assistant; broader distro support and graphical installation are still
+to be built.
+
 ## Using a live image
 
 The guided setup opens on the first local console. It detects an existing
