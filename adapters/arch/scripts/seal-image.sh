@@ -17,7 +17,9 @@ workspace="/repo/.build/remaster"
 root="$workspace/root"
 rm -f "$workspace/airootfs.sfs"
 mksquashfs "$root" "$workspace/airootfs.sfs" -noappend -comp zstd -Xcompression-level 6 -mem 512M -processors "${BUILD_JOBS:-2}"
-cp "$workspace/airootfs.sfs" "$workspace/iso/arch/x86_64/airootfs.sfs"
+# Both are in the same staging filesystem. Avoid holding two full copies of
+# the sealed root while assembling the ISO; later builds replace the tree.
+ln -f "$workspace/airootfs.sfs" "$workspace/iso/arch/x86_64/airootfs.sfs"
 rm -f "$workspace/iso/arch/x86_64/airootfs.sfs.cms.sig"
 (cd "$workspace/iso/arch/x86_64"; sha512sum airootfs.sfs > airootfs.sha512)
 output="/repo/dist/arch-agent-${values[0]#archlinux-}"
@@ -35,6 +37,9 @@ xorriso -as mkisofs -V "AGENT_${snapshot//\//}" --modification-date="$(cat "$wor
 # Require the kernel's UUID lookup to identify this exact ISO directly.
 uuid=$(basename "$(find "$workspace/iso/boot" -maxdepth 1 -name '*.uuid' -print -quit)" .uuid)
 test "$(blkid -p -s UUID -o value "$output")" = "$uuid"
+# Previous release directories may hard-link these artifacts. Replace metadata
+# paths before writing so a rebuild never changes an archived receipt.
+rm -f dist/inputs.lock.json dist/iso-signature.txt dist/packages.txt dist/SHA256SUMS
 cp inputs.lock.json dist/inputs.lock.json
 cp "$workspace/iso-signature.txt" dist/iso-signature.txt
 cp "$workspace/iso/arch/pkglist.x86_64.txt" dist/packages.txt
