@@ -161,9 +161,11 @@ class SupportTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as area:
             result = inventory(run=run, root=Path(area), facts=facts)
         self.assertTrue(all(v['returncode'] is None for v in result['evidence'].values()))
-        self.assertEqual(run.call_count, len(COMMANDS))
+        self.assertEqual(run.call_count, len(COMMANDS) - 1)
+        self.assertFalse(result['observed']['zfs_loaded'])
         for call in run.call_args_list:
             self.assertEqual(call.kwargs['timeout'], 15)
             self.assertNotIn(call.args[0][0], ('modprobe', 'mount', 'nixos-install', 'pacstrap'))
             self.assertNotIn('import', call.args[0])
             self.assertNotIn('rollback', call.args[0])
+            self.assertNotIn(call.args[0][0], ('zfs', 'zpool'))

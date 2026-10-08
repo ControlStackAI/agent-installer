@@ -13,7 +13,7 @@ COMMANDS = {
     'memory': ['free', '--bytes'],
     'space': ['df', '-B1', '--output=avail,target', '/'],
     'zfs_module': ['modinfo', '-F', 'vermagic', 'zfs'],
-    'zfs_version': ['zfs', 'version'],
+    'zfs_version': ['modinfo', '-F', 'version', 'zfs'],
     'pool_health': ['zpool', 'status', '-x'],
     'network_manager': ['systemctl', 'is-active', 'NetworkManager.service'],
 }
@@ -33,10 +33,15 @@ def command(args, run=subprocess.run):
 
 
 def inventory(run=subprocess.run, root=Path('/'), facts=None):
-    observations = {name: command(args, run) for name, args in COMMANDS.items()}
+    # libzfs utilities can load the module themselves. Never invoke them as a
+    # diagnostic on a machine where ZFS is not already loaded.
+    zfs_loaded = (root / 'sys/module/zfs').is_dir()
+    observations = {name: (command(args, run) if name != 'pool_health' or zfs_loaded else
+                           {'returncode': None, 'output': 'ZFS is not loaded; pool inspection skipped without loading it.'})
+                    for name, args in COMMANDS.items()}
     observed = facts if facts is not None else discover(root=root, run=run)
     boot_id = root / 'proc/sys/kernel/random/boot_id'
-    observed = dict(observed, boot_id=boot_id.read_text().strip() if boot_id.is_file() else '')
+    observed = dict(observed, boot_id=boot_id.read_text().strip() if boot_id.is_file() else '', zfs_loaded=zfs_loaded)
     return {'schema': 1, 'observed': observed, 'evidence': observations,
             'limits': ['Read-only inventory; no driver, firmware, graphics, audio or installation qualification.',
                        'No credentials, Wi-Fi profiles, logs, serial-port contents or authentication directories are collected.']}
