@@ -10,6 +10,14 @@ session state, instruction loading, start and logout. A manifest supplies that
 runtime's connectivity endpoints. Codex is integrated; other live runtimes need
 an explicit implementation of `AgentRuntime`, manifest and tests.
 
+`frontends/ratatui/` supplies the optional terminal welcome and guided dashboard.
+It calls the fixed JSON interface in `core.frontend` for shared presets, local
+records, read-only reports and readiness checks. It suspends terminal rendering
+for native networking, editing, authentication and conversation, then resumes
+the same dashboard. Direct conversation and the basic text fallback use the
+same core flow. No frontend duplicates a runtime or distro installer. See
+[terminal interface](terminal-interface.md) for controls and preview mode.
+
 A distribution adapter contains its native image builder and package policy.
 It installs the core, runtime, profiles and common identity, then writes
 `/etc/agent-installer/image.json` with schema, distro and runtime. Live images

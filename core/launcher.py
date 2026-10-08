@@ -7,6 +7,7 @@ import os
 import re
 import subprocess
 import shutil
+import sys
 from pathlib import Path
 from core.checks import Readiness
 from core.environment import discover
@@ -36,8 +37,9 @@ def identity(share, profile, facts):
 
 
 class Wizard:
-    def __init__(self, checks, runtime, choose=input, key=getpass.getpass, shell=None):
+    def __init__(self, checks, runtime, choose=input, key=getpass.getpass, shell=None, return_after_agent=False):
         self.checks, self.runtime, self.choose, self.key = checks, runtime, choose, key
+        self.return_after_agent = return_after_agent
         self.shell = shell or (lambda: subprocess.run([shutil.which('bash') or '/bin/sh', '-l']))
 
     def next_input(self, prompt):
@@ -72,6 +74,8 @@ class Wizard:
                 # Recheck immediately before a new agent session, including after a disconnect.
                 if self.checks.ready():
                     self.runtime.start()
+                    if self.return_after_agent:
+                        return
             else:
                 print('\nStep 2: Sign in.\n1) ChatGPT subscription: sign in on your phone or another computer (recommended)\n'
                       '2) ChatGPT subscription: browser sign-in\n3) OpenAI API key (API billing is separate)\n'
@@ -107,6 +111,8 @@ class Wizard:
                     continue
                 print('\nStep 3: Starting your local assistant.', flush=True)
                 self.runtime.start()
+                if self.return_after_agent:
+                    return
             print('\n1) Return to the assistant\n2) Forget sign-in and choose an account\n'
                   '9) Troubleshooting shell\n0) Leave setup')
             choice = self.next_input('Choose: ')
@@ -124,6 +130,9 @@ def main():
     parser.add_argument('--facts', action='store_true', help='Print non-secret runtime facts')
     parser.add_argument('--preflight', action='store_true', help='Check readiness without signing in')
     parser.add_argument('--network', action='store_true', help='Open connection setup')
+    parser.add_argument('--direct', action='store_true', help='Use the direct agent sign-in and conversation flow')
+    parser.add_argument('--text', action='store_true', help='Use the basic text interface instead of Ratatui')
+    parser.add_argument('--return-to-ui', action='store_true', help=argparse.SUPPRESS)
     args = parser.parse_args()
     facts = discover()
     if args.facts:
@@ -149,8 +158,14 @@ def main():
     if mount.returncode or mount.stdout.strip() != 'tmpfs':
         raise ValueError('The live session requires /run to be memory-backed.')
     os.umask(0o077)
+    tui = os.environ.get('AGENT_INSTALLER_TUI') or shutil.which('agent-installer-tui')
+    if not args.direct and not args.text and tui and os.isatty(0) and os.isatty(1) and os.environ.get('TERM') != 'dumb':
+        result = subprocess.run([tui, '--python', sys.executable, '--share', str(SHARE)])
+        if result.returncode == 0:
+            return 0
+        print('The graphical-style console could not finish. Opening the basic text interface.')
     runtime = load_runtime(image['runtime'], session=SESSION, identity=identity(SHARE, profile, facts))
-    Wizard(checks, runtime).run()
+    Wizard(checks, runtime, return_after_agent=args.return_to_ui).run()
     return 0
 
 

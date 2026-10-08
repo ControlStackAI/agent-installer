@@ -33,6 +33,9 @@ for name, flags in [('agent-installer',''),('agent-preflight','--preflight'),('a
 support = root / 'usr/local/bin/agent-support'
 support.write_text('#!/bin/sh\nPYTHONPATH=/usr/lib/agent-installer exec python3 -m core.assistant "$@"\n')
 support.chmod(0o755)
+tui = root / 'usr/local/bin/agent-installer-tui'
+tui.write_text('#!/bin/sh\nexport PYTHONPATH=/usr/lib/agent-installer\nexec /usr/local/libexec/agent-installer-tui "$@"\n')
+tui.chmod(0o755)
 # Stock Arch's root login shell is zsh. Other login shells are also supported.
 hook = (source / 'core/live-login.sh').read_text()
 for name in ['.zlogin', '.bash_profile']:

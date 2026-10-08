@@ -2,6 +2,10 @@
 set -euo pipefail
 cd /repo
 python scripts/inputs.py --check
+# Build only from public Rust sources and the reviewed crate checksum lock.
+# Cargo's cache stays in disposable staging; no operator Cargo profile is mounted.
+CARGO_HOME=/repo/.build/cargo-home cargo build --locked --release --jobs "${BUILD_JOBS:-2}" \
+    --manifest-path /shared/frontends/ratatui/Cargo.toml --target-dir /repo/.build/tui-target
 mapfile -t values < <(python - <<'PY'
 import json
 l=json.load(open('inputs.lock.json'))
@@ -52,6 +56,10 @@ chmod 755 "$root/usr/local/bin/agent-installer" "$root/usr/local/bin/agent-netwo
 mkdir -p "$root/usr/share/arch-agent-installer"
 cp /repo/inputs.lock.json "$root/usr/share/arch-agent-installer/inputs.lock.json"
 python /shared/core/install-overlay.py "$root" /shared --distro arch
+install -D -m 755 /repo/.build/tui-target/release/agent-installer-tui "$root/usr/local/libexec/agent-installer-tui"
+cp /shared/frontends/ratatui/Cargo.lock "$root/usr/share/agent-installer/tui-Cargo.lock"
+python /shared/tui-notices.py --lock /shared/frontends/ratatui/Cargo.lock \
+    --sources /repo/.build/cargo-home/registry/src --output "$root/usr/share/agent-installer/tui-notices"
 cp /repo/inputs.lock.json "$root/usr/share/agent-installer/arch-inputs.lock.json"
 arch-chroot "$root" systemctl disable systemd-networkd.service systemd-networkd.socket systemd-networkd-wait-online.service iwd.service systemd-resolved.service
 arch-chroot "$root" systemctl enable NetworkManager.service systemd-timesyncd.service agent-smoke-test.service

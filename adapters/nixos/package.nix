@@ -1,5 +1,6 @@
 { pkgs }:
 let
+  tui = import ../../frontends/ratatui/package.nix { inherit pkgs; };
   source = pkgs.lib.fileset.toSource {
     root = ../..;
     fileset = pkgs.lib.fileset.unions [ ../../core ../../identity ../../profiles ../../presets ../../runtimes ../../tests ];
@@ -16,7 +17,12 @@ in pkgs.runCommand "controlstack-installer-core" {
   mkdir -p $out/share/agent-installer/runtimes
   cp ${source}/runtimes/codex/manifest.json $out/share/agent-installer/runtimes/codex.json
   makeWrapper ${pkgs.python3}/bin/python3 $out/bin/agent-installer \
-    --set PYTHONPATH $out/lib/agent-installer --add-flags "-m core.launcher"
+    --set PYTHONPATH $out/lib/agent-installer --set AGENT_INSTALLER_TUI $out/bin/agent-installer-tui \
+    --add-flags "-m core.launcher"
+  makeWrapper ${tui}/bin/agent-installer-tui $out/bin/agent-installer-tui \
+    --set PYTHONPATH $out/lib/agent-installer \
+    --add-flags "--python ${pkgs.python3}/bin/python3 --share $out/share/agent-installer"
+  ln -s ${tui}/share/agent-installer-tui/notices $out/share/agent-installer/tui-notices
   makeWrapper $out/bin/agent-installer $out/bin/agent-preflight --add-flags --preflight
   makeWrapper $out/bin/agent-installer $out/bin/agent-network --add-flags --network
   makeWrapper ${pkgs.python3}/bin/python3 $out/bin/agent-support \

@@ -15,6 +15,10 @@ and public signing keys. It does not vendor credentials or a private host flake.
 - NixOS/Nixpkgs: https://github.com/NixOS/nixpkgs ; public pinned revision and
   NAR hash in flake.lock. The NixOS module system builds the ISO and tracks the
   package closure; package licenses remain their upstream licenses.
+- Ratatui: https://ratatui.rs and https://github.com/ratatui/ratatui ; upstream
+  MIT. Crossterm and transitive Rust crates retain their own licenses. Exact
+  versions/checksums are in frontends/ratatui/Cargo.lock. Image builds preserve
+  upstream license/notice files under share/agent-installer/tui-notices.
 
 Published source licensing does not replace redistribution requirements for a
 release's third-party packages. Preserve upstream license files and provenance.

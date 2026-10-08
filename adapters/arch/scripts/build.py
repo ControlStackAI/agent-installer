@@ -110,6 +110,9 @@ def main():
         command.extend(['--mount', f'type=bind,src={ROOT / name},dst=/repo/{name},readonly'])
     for name in ('core', 'runtimes', 'identity', 'profiles', 'presets', 'tests'):
         command.extend(['--mount', f'type=bind,src={ROOT.parent.parent / name},dst=/shared/{name},readonly'])
+    for name in ('Cargo.toml', 'Cargo.lock', 'src'):
+        command.extend(['--mount', f'type=bind,src={ROOT.parent.parent / "frontends/ratatui" / name},dst=/shared/frontends/ratatui/{name},readonly'])
+    command.extend(['--mount', f'type=bind,src={ROOT.parent.parent / "scripts/tui-notices.py"},dst=/shared/tui-notices.py,readonly'])
     for name in ('.build', 'dist'):
         command.extend(['--mount', f'type=bind,src={ROOT / name},dst=/repo/{name}'])
     command.extend(["-e", "BUILD_JOBS=" + str(args.jobs),

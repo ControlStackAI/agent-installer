@@ -7,6 +7,11 @@ echo AGENT_SMOKE_START
 case "$(systemd-detect-virt)" in kvm|qemu) ;; *) false ;; esac
 uname -r
 codex --version
+agent-installer-tui --version
+agent-installer-tui --render 80 25 | grep -F 'Guided setup'
+agent-installer-tui --render 80 25 | grep -F 'Direct agent conversation'
+agent-support presets --preset custom
+echo AGENT_TUI_PACKAGE_PASS
 help=$(codex login --help)
 grep -F -- '--device-auth' <<< "$help"
 grep -F -- '--with-api-key' <<< "$help"

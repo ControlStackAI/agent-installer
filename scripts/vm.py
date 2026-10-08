@@ -70,7 +70,7 @@ def main():
         lock['arch']['kernel_release'] = evaluate('boot.kernelPackages.kernel.modDirVersion')
         lock['zfs']['version'] = evaluate('boot.zfs.package.version')
     passed = (process.returncode == 0 and 'AGENT_SMOKE_PASS' in output and 'AGENT_SMOKE_FAIL' not in output
-              and all(marker in output for marker in ('AGENT_PREFLIGHT_PASS', 'AGENT_LAUNCHER_FIXTURES_PASS', 'AGENT_ZFS_SNAPSHOT_PASS'))
+              and all(marker in output for marker in ('AGENT_PREFLIGHT_PASS', 'AGENT_TUI_PACKAGE_PASS', 'AGENT_LAUNCHER_FIXTURES_PASS', 'AGENT_ZFS_SNAPSHOT_PASS'))
               and lock['arch']['kernel_release'] in output and 'codex-cli ' + lock['codex']['version'] in output
               and 'zfs-' + lock['zfs']['version'] in output)
     with args.iso.open('rb') as stream:
@@ -78,6 +78,7 @@ def main():
     receipt = {'iso_sha256': iso_hash, 'mode': mode, 'passed': passed, 'elapsed_seconds': round(time.monotonic() - started, 2),
                'disk_devices': ('File-backed read-only Ventoy USB only' if args.ventoy_disk else 'ISO CD-ROM only') + '; no host disks or target disks attached',
                'checks': ['ISO boot', 'kernel version', 'Codex version/login flags', 'NetworkManager active',
+                          'Ratatui binary and both entry paths render', 'editable preset data and shared frontend fixtures',
                           'RAM credential storage and cleanup (fixture authentication)', 'matching ZFS module loaded',
                           'real clock and HTTPS preflight', 'snapshot rollback', 'full and incremental ZFS send/receive',
                           'pool export/import and data hashes'],

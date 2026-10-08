@@ -8,3 +8,5 @@ result
 result-*
 auth.json
 .env
+/target/
+/frontends/ratatui/target/

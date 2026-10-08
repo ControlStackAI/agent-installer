@@ -16,6 +16,7 @@ onboarding and identity. Hardware support still needs broader testing.
 
 ```
 core/               shared onboarding, readiness and environment detection
+frontends/ratatui/  optional guided console; direct conversation stays available
 identity/           friendly local installer role and data-preservation guidance
 profiles/           distro facts, capability declarations and agent instructions
 presets/            editable starting choices; custom setups remain unrestricted
@@ -50,12 +51,20 @@ to be built.
 
 ## Using a live image
 
-The guided setup opens on the first local console. It detects an existing
+The welcome screen opens on the first local console. Choose **Guided setup**
+for a dashboard or **Direct agent conversation** to describe what you want.
+The guided interface offers presets, custom choices, hardware checks, plan
+review, recovery and non-secret reboot handoffs. Both paths use the same
+assistant and readiness checks. See [the terminal interface](docs/terminal-interface.md).
+
+Setup detects an existing
 connection or offers Wi-Fi setup, then checks internet, time and ZFS readiness.
 Sign-in stays behind these checks. ChatGPT subscription device-code login lets
 you sign in on a phone or another computer. Browser login and hidden API-key
 input are also available; API billing is separate. Successful sign-in starts
-the local assistant in the same flow. A troubleshooting shell remains available.
+the local assistant in the same flow. Network setup and conversation use the
+full terminal and return to the dashboard afterward. A troubleshooting shell
+remains available, as does `agent-installer --text` for the basic console.
 
 Credentials stay in private RAM storage and disappear at reboot. Session notes
 also stay in RAM unless you approve saving a reviewed, non-secret handoff file.
@@ -81,7 +90,8 @@ start a resident agent. See [the agent-directed workflow](docs/agent-directed-wo
 
 ## Building and checking
 
-Requirements: Python 3.11+; Docker for Arch; Nix with flakes for NixOS. Both
+Requirements: Python 3.11+; Docker for Arch; Nix with flakes for NixOS. The Arch
+builder compiles the Rust TUI in isolation; Nix builds its native Rust package. Both
 current image builders target x86_64 Linux. Reviewed inputs are pinned: building
 never silently resolves a new runtime, image or package snapshot.
 

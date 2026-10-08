@@ -50,6 +50,28 @@ with (area/'normal-qemu.log').open('w') as err:
                 time.sleep(.025)
         time.sleep(args.boot_wait)
         call('screendump',{'filename':str(area/(mode+'-onboarding.png')),'format':'png'})
+        def screenshot_text(filename):
+            text=subprocess.check_output(['tesseract',str(area/filename),'stdout'],stderr=subprocess.DEVNULL,text=True).lower()
+            (area/(filename+'.txt')).write_text(text)
+            return ' '.join(text.split())
+        welcome=screenshot_text(mode+'-onboarding.png')
+        assert 'guided setup' in welcome and 'direct agent conversation' in welcome, welcome
+        type_text('g')
+        time.sleep(2)
+        type_text('2')
+        time.sleep(1)
+        call('screendump',{'filename':str(area/(mode+'-presets.png')),'format':'png'})
+        type_text('\n')
+        time.sleep(2)
+        type_text('3')
+        time.sleep(1)
+        call('screendump',{'filename':str(area/(mode+'-choices.png')),'format':'png'})
+        type_text('a')
+        time.sleep(12 if args.offline else 50)
+        call('screendump',{'filename':str(area/(mode+'-connection-gate.png')),'format':'png'})
+        gate=screenshot_text(mode+'-connection-gate.png')
+        if args.offline:
+            assert 'internet check failed' in gate and 'step 2' not in gate and 'api key' not in gate, gate
         type_text('9\n')
         time.sleep(2)
         type_text('systemctl is-active agent-smoke-test.service >/dev/ttyS0\n')
@@ -58,9 +80,28 @@ with (area/'normal-qemu.log').open('w') as err:
         time.sleep(1)
         type_text('agent-installer --facts >/dev/ttyS0\n')
         time.sleep(2)
+        type_text('cat /run/agent-installer/work/handoff.json >/dev/ttyS0\n')
+        time.sleep(1)
+        type_text('agent-installer-tui --version >/dev/ttyS0\n')
+        time.sleep(1)
         type_text('exit\n')
         time.sleep(3)
         type_text('0\n')
+        time.sleep(3)
+        call('screendump',{'filename':str(area/(mode+'-returned-dashboard.png')),'format':'png'})
+        type_text('q')
+        time.sleep(2)
+        type_text('agent-installer\n')
+        time.sleep(3)
+        type_text('d')
+        time.sleep(12 if args.offline else 50)
+        call('screendump',{'filename':str(area/(mode+'-direct-path.png')),'format':'png'})
+        direct=screenshot_text(mode+'-direct-path.png')
+        if args.offline:
+            assert 'internet check failed' in direct and 'step 2' not in direct, direct
+        type_text('0\n')
+        time.sleep(3)
+        type_text('q')
         time.sleep(2)
         type_text('echo normal_boot_pass >/dev/ttyS0\n')
         time.sleep(1)
@@ -72,10 +113,10 @@ with (area/'normal-qemu.log').open('w') as err:
 socket_dir.cleanup()
 output=log.read_text(errors='replace')
 version=json.loads((root/'runtimes/codex/inputs.lock.json').read_text())['version']
-passed=all(x in output for x in ('inactive','"phase": "live"', '"distro_id": "'+args.distro+'"','codex-cli '+version,'normal_boot_pass')) and 'AGENT_SMOKE_START' not in output and p.returncode==0
+passed=all(x in output for x in ('inactive','"phase": "live"', '"distro_id": "'+args.distro+'"','codex-cli '+version,'normal_boot_pass', 'agent-installer-tui 0.1.0', '"preset": "familiar"')) and 'AGENT_SMOKE_START' not in output and p.returncode==0
 with iso.open('rb') as iso_file:
     iso_hash=hashlib.file_digest(iso_file,'sha256').hexdigest()
-receipt={'iso_sha256':iso_hash,'mode':mode,'passed':passed,'elapsed_seconds':round(time.monotonic()-started,2),'checks':['normal ISO boot without smoke flag','smoke service remains inactive','real root console keyboard input','actual Codex binary starts','automatic guided launcher and troubleshooting shell', 'offline connectivity gate' if args.offline else 'online onboarding'],'disk_devices':'ISO only; no host or target disks','not_tested':['owner account login','model response','disk installation']}
+receipt={'iso_sha256':iso_hash,'mode':mode,'passed':passed,'elapsed_seconds':round(time.monotonic()-started,2),'checks':['normal ISO boot without smoke flag','smoke service remains inactive','real root console keyboard input','actual Codex binary starts','automatic Ratatui welcome and guided/direct paths', 'preset selection reaches agent session as a handoff', 'native interactive handoff and return to dashboard', 'troubleshooting shell', 'offline connectivity gate' if args.offline else 'online onboarding'],'disk_devices':'ISO only; no host or target disks','not_tested':['owner account login','model response','disk installation']}
 (area/(mode+'-result.json')).write_text(json.dumps(receipt,indent=2)+'\n')
 print(json.dumps(receipt));print(output)
 assert passed

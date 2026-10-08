@@ -13,6 +13,7 @@
     nixosModules.liveImage = import ./adapters/nixos/live-image.nix;
     packages.${system} = {
       installer-core = import ./adapters/nixos/package.nix { inherit pkgs; };
+      installer-tui = import ./frontends/ratatui/package.nix { inherit pkgs; };
       codex = import ./runtimes/codex/package.nix { inherit pkgs; };
       nixos-iso = live.config.system.build.isoImage;
     };

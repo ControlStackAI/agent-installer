@@ -27,7 +27,7 @@ jobs:
           DISTRO: ${{ inputs.distro }}
         run: python3 scripts/build.py --distro "$DISTRO" --jobs 2
       - name: Isolated VM tools
-        run: sudo apt-get update && sudo apt-get install -y qemu-system-x86 ovmf
+        run: sudo apt-get update && sudo apt-get install -y qemu-system-x86 ovmf tesseract-ocr
       - name: BIOS and UEFI boots without host disks
         env:
           DISTRO: ${{ inputs.distro }}
@@ -35,7 +35,9 @@ jobs:
           iso=(dist/"$DISTRO"/*.iso)
           python3 scripts/vm.py "${iso[0]}" --distro "$DISTRO" --timeout 1800
           python3 scripts/vm.py "${iso[0]}" --distro "$DISTRO" --timeout 1800 --uefi-code /usr/share/OVMF/OVMF_CODE_4M.fd --uefi-vars /usr/share/OVMF/OVMF_VARS_4M.fd
+          python3 scripts/console.py "${iso[0]}" --distro "$DISTRO" --offline --boot-wait 180
           cp .build/smoke/"$DISTRO"/*-result.json .build/smoke/"$DISTRO"/*.log dist/"$DISTRO"/
+          cp .build/smoke/"$DISTRO"/*.png dist/"$DISTRO"/
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: agent-${{ inputs.distro }}-${{ github.run_number }}
