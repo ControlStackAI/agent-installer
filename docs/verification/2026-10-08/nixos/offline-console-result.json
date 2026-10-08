@@ -1,0 +1,23 @@
+{
+  "iso_sha256": "9e65bb5448d7bd30e9e420fe85ee5fc1f88175c739abed34a4cbb5da9f8c20b4",
+  "mode": "offline-console",
+  "passed": true,
+  "elapsed_seconds": 246.79,
+  "checks": [
+    "normal ISO boot without smoke flag",
+    "smoke service remains inactive",
+    "real root console keyboard input",
+    "actual Codex binary starts",
+    "automatic Ratatui welcome and guided/direct paths",
+    "preset selection reaches agent session as a handoff",
+    "native interactive handoff and return to dashboard",
+    "troubleshooting shell",
+    "offline connectivity gate"
+  ],
+  "disk_devices": "ISO only; no host or target disks",
+  "not_tested": [
+    "owner account login",
+    "model response",
+    "disk installation"
+  ]
+}

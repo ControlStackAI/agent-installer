@@ -23,6 +23,51 @@ VM installation tests, removed-media reboots, rollback/recovery tests and then
 explicitly approved hardware qualification. See capability declarations in
 profiles/*.json. Tests and build success do not change these declarations.
 
+## Guided terminal images, 2026-10-08
+
+Both images below were built from source
+`9d8bcd3ef090bae17018d747fa57f8bf9f14d0b8`. Later README/receipt changes do not
+change those image bytes. The [source/package checks](https://github.com/ControlStackAI/agent-installer/actions/runs/37827953179)
+passed, including NixOS configuration evaluation and native package builds.
+There are 62 tests: 40 shared Python, 15 Arch input-policy, and 7 Rust frontend
+tests. The Rust tests run in the native Nix package build as well as development.
+
+| Image | SHA256 | Hosted build |
+| --- | --- | --- |
+| Arch, Linux 7.2.8-arch1-2, ZFS 2.4.4, Codex 0.160.1 | `44a4cd62edf46be99ac9ab5fe603d7abb5e4b90b0b8230463cb05bbb1154ae73` | [Passing build and artifact](https://github.com/ControlStackAI/agent-installer/actions/runs/37827953315) |
+| NixOS, Linux 7.2.9, ZFS 2.4.4, Codex 0.160.1 | `9e65bb5448d7bd30e9e420fe85ee5fc1f88175c739abed34a4cbb5da9f8c20b4` | [Passing build and artifact](https://github.com/ControlStackAI/agent-installer/actions/runs/37827958787) |
+
+Each exact image passed three independent VM checks:
+
+- **BIOS functional boot** and **UEFI functional boot:** actual Codex version and
+  login flags, the packaged Ratatui binary, shared frontend fixtures,
+  NetworkManager, real HTTPS/clock readiness, matching loaded ZFS module, and
+  actual snapshot rollback, full/incremental send/receive, pool export/import,
+  and data hashes on temporary guest-only file-backed pools.
+- **Ordinary offline console boot without a smoke flag:** automatic welcome,
+  guided setup, preset selection and editable choices reaching the agent's
+  handoff record, native connection flow, return to the dashboard, direct
+  conversation entry, real keyboard access to a troubleshooting shell, and
+  starting the actual Codex binary. Offline authentication stays unavailable.
+
+The hosted artifacts include the ISOs, SHA256SUMS, three per-image receipts,
+console screenshots, and logs. A small permanent copy of the exact receipts is
+under [verification/2026-10-08](verification/2026-10-08/README.md).
+The README screenshot is the final Arch image's actual ordinary console boot.
+Artifacts expire after 14 days; the preserved receipts remain useful evidence
+but do not provide an expired image download.
+
+No host or target disks were attached. These runs did not use an owner account,
+produce a real model response, install a target disk, boot root-on-ZFS, or verify
+installed-system recovery. The physical-disk executor capability remains false.
+The new images were not copied to Ventoy in this iteration. The prior hardware
+login and USB observations belong to older image bytes.
+
+Pinned upstream ArchZFS assets were preserved in a public build-input archive
+after the rolling upstream release pruned or replaced them. The original pinned
+digests and signing fingerprints remain enforced; no kernel, ZFS, or Codex
+version was changed as a side effect. See [provenance](third-party.md).
+
 ## Agent-directed support updates, 2026-10-07
 
 The support additions pass 44 unit tests (30 shared, 14 Arch input-policy),

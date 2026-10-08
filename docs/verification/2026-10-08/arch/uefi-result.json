@@ -1,0 +1,27 @@
+{
+  "iso_sha256": "44a4cd62edf46be99ac9ab5fe603d7abb5e4b90b0b8230463cb05bbb1154ae73",
+  "mode": "uefi",
+  "passed": true,
+  "elapsed_seconds": 62.07,
+  "disk_devices": "ISO CD-ROM only; no host disks or target disks attached",
+  "checks": [
+    "ISO boot",
+    "kernel version",
+    "Codex version/login flags",
+    "NetworkManager active",
+    "Ratatui binary and both entry paths render",
+    "editable preset data and shared frontend fixtures",
+    "RAM credential storage and cleanup (fixture authentication)",
+    "matching ZFS module loaded",
+    "real clock and HTTPS preflight",
+    "snapshot rollback",
+    "full and incremental ZFS send/receive",
+    "pool export/import and data hashes"
+  ],
+  "not_tested": [
+    "account login",
+    "model inference",
+    "physical installation",
+    "ZFS root reboot/recovery"
+  ]
+}
