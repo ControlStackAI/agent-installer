@@ -66,10 +66,11 @@ class InputsTests(unittest.TestCase):
                 'mirrors': ['https://archive.invalid/preserved'],
                 'sha256': hashlib.sha256(content).hexdigest()}
         with tempfile.TemporaryDirectory() as directory:
-            with patch('build.urllib.request.urlopen', side_effect=[urllib.error.HTTPError(item['url'], 404, 'pruned', {}, None), io.BytesIO(content)]) as request:
+            with patch('build.urllib.request.urlopen', return_value=io.BytesIO(content)) as request:
                 path = download(item, Path(directory))
             self.assertEqual(path.read_bytes(), content)
-            self.assertEqual(request.call_args_list[1].args[0].full_url, item['mirrors'][0])
+            request.assert_called_once()
+            self.assertEqual(request.call_args.args[0].full_url, item['mirrors'][0])
         self.lock['zfs']['packages'][0]['mirrors'] = ['http://insecure.invalid/package']
         with self.assertRaisesRegex(ValueError, 'HTTPS'):
             validate(self.lock)

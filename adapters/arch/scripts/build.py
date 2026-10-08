@@ -25,9 +25,9 @@ def candidate_urls(item):
         return ['https://geo.mirror.pkgbuild.com/iso/' + url[len(prefix):], url]
     if url.startswith('https://archive.archlinux.org/repos/') and '/core/os/x86_64/' in url:
         return ['https://geo.mirror.pkgbuild.com/core/os/x86_64/' + item['name'], url]
-    # Explicit mirrors preserve the exact locked bytes when rolling release
-    # pages prune older assets. The same digest and detached signer still apply.
-    return [url, *item.get('mirrors', [])]
+    # Prefer declared preserved archives: rolling releases can also replace
+    # same-name assets. Every candidate still needs the original digest/signer.
+    return [*item.get('mirrors', []), url]
 
 
 def download(item, cache, reuse_root=None):

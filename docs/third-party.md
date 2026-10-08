@@ -16,7 +16,8 @@ and public signing keys. It does not vendor credentials or a private host flake.
   in the input lock point to our [preserved signed build inputs](https://github.com/ControlStackAI/agent-installer/releases/tag/build-inputs-2026-10-05).
   These keep the original package/signature digests and signer, with provenance
   and upstream source links. A mirror never selects another version or weakens
-  verification. The archive is separate from live-image releases.
+  verification. Declared preserved archives take precedence because upstream
+  also replaces same-name assets. The archive is separate from live-image releases.
 - NixOS/Nixpkgs: https://github.com/NixOS/nixpkgs ; public pinned revision and
   NAR hash in flake.lock. The NixOS module system builds the ISO and tracks the
   package closure; package licenses remain their upstream licenses.
