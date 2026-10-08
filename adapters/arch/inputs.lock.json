@@ -42,8 +42,14 @@
         "signature": {
           "name": "zfs-linux-2.4.4_7.2.8.arch1.2-1-x86_64.pkg.tar.zst.sig",
           "url": "https://github.com/archzfs/archzfs/releases/download/experimental/zfs-linux-2.4.4_7.2.8.arch1.2-1-x86_64.pkg.tar.zst.sig",
-          "sha256": "c221ac6b52c1a4ea87ffe23d7c83e2903db16452f62851c95425019258ce89d2"
-        }
+          "sha256": "c221ac6b52c1a4ea87ffe23d7c83e2903db16452f62851c95425019258ce89d2",
+          "mirrors": [
+            "https://github.com/ControlStackAI/agent-installer/releases/download/build-inputs-2026-10-05/zfs-linux-2.4.4_7.2.8.arch1.2-1-x86_64.pkg.tar.zst.sig"
+          ]
+        },
+        "mirrors": [
+          "https://github.com/ControlStackAI/agent-installer/releases/download/build-inputs-2026-10-05/zfs-linux-2.4.4_7.2.8.arch1.2-1-x86_64.pkg.tar.zst"
+        ]
       },
       {
         "name": "zfs-utils-2.4.4-3-x86_64.pkg.tar.zst",
@@ -52,8 +58,14 @@
         "signature": {
           "name": "zfs-utils-2.4.4-3-x86_64.pkg.tar.zst.sig",
           "url": "https://github.com/archzfs/archzfs/releases/download/experimental/zfs-utils-2.4.4-3-x86_64.pkg.tar.zst.sig",
-          "sha256": "892b3fa7a56f4b2ac74766ff37bba1d1e4fc7180f05fec0544e52bbfa2044729"
-        }
+          "sha256": "892b3fa7a56f4b2ac74766ff37bba1d1e4fc7180f05fec0544e52bbfa2044729",
+          "mirrors": [
+            "https://github.com/ControlStackAI/agent-installer/releases/download/build-inputs-2026-10-05/zfs-utils-2.4.4-3-x86_64.pkg.tar.zst.sig"
+          ]
+        },
+        "mirrors": [
+          "https://github.com/ControlStackAI/agent-installer/releases/download/build-inputs-2026-10-05/zfs-utils-2.4.4-3-x86_64.pkg.tar.zst"
+        ]
       }
     ]
   }

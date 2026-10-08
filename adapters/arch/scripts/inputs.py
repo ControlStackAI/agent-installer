@@ -80,6 +80,9 @@ def validate(lock):
             raise ValueError("Unsafe download filename")
         if not item["url"].startswith("https://") or not re.fullmatch(r"[0-9a-f]{64}", item["sha256"]):
             raise ValueError("HTTPS and SHA256 required")
+        mirrors = item.get('mirrors', [])
+        if not isinstance(mirrors, list) or any(not isinstance(u, str) or not u.startswith('https://') for u in mirrors):
+            raise ValueError('Mirrors must be HTTPS URLs for the same pinned bytes')
     if not re.fullmatch(r"archlinux@sha256:[0-9a-f]{64}", lock["builder_image"]):
         raise ValueError("Builder image must be pinned")
 

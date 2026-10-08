@@ -12,6 +12,11 @@ and public signing keys. It does not vendor credentials or a private host flake.
 - ArchZFS: https://github.com/archzfs/archzfs ; pinned released package bytes and
   signatures. OpenZFS is https://github.com/openzfs/zfs under its upstream terms,
   including CDDL. Do not describe all ISO contents as Apache-2.0.
+  The rolling upstream release pruned the Linux 7.2.8 module. Explicit mirrors
+  in the input lock point to our [preserved signed build inputs](https://github.com/ControlStackAI/agent-installer/releases/tag/build-inputs-2026-10-05).
+  These keep the original package/signature digests and signer, with provenance
+  and upstream source links. A mirror never selects another version or weakens
+  verification. The archive is separate from live-image releases.
 - NixOS/Nixpkgs: https://github.com/NixOS/nixpkgs ; public pinned revision and
   NAR hash in flake.lock. The NixOS module system builds the ISO and tracks the
   package closure; package licenses remain their upstream licenses.
