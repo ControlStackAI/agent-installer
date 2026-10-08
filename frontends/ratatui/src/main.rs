@@ -108,6 +108,7 @@ struct App {
     job: Option<(Receiver<Result<Value, String>>, String)>,
     backend: Backend,
     preview: bool,
+    console_palette: bool,
 }
 
 fn preview_data() -> Value {
@@ -135,6 +136,7 @@ impl App {
             job: None,
             backend,
             preview,
+            console_palette: env::var("TERM").as_deref() == Ok("linux"),
         }
     }
     fn request(&mut self, action: &str, args: &[String]) {
@@ -323,6 +325,15 @@ fn render(frame: &mut Frame, app: &App) {
     if area.width < 55 || area.height < 18 {
         frame.render_widget(paragraph("This terminal is small. Enlarge it to at least 55 × 18 for the full interface.\n\nG  Guided setup\nD  Direct agent conversation\nQ  Leave setup", "Welcome", 0), body);
     } else if app.page == Page::Welcome {
+        let horizontal = body.width >= 100;
+        let welcome_width = body.width.min(116);
+        let welcome_height = body.height.min(if horizontal { 18 } else { 20 });
+        let welcome_area = Rect::new(
+            body.x + (body.width - welcome_width) / 2,
+            body.y + (body.height - welcome_height) / 2,
+            welcome_width,
+            welcome_height,
+        );
         let parts = Layout::default()
             .direction(Direction::Vertical)
             .constraints([
@@ -330,9 +341,8 @@ fn render(frame: &mut Frame, app: &App) {
                 Constraint::Min(10),
                 Constraint::Length(2),
             ])
-            .split(body);
+            .split(welcome_area);
         frame.render_widget(Paragraph::new("Make yourself at home.\nChoose a little guidance, or go straight to a conversation.").style(Style::default().fg(TEXT)).wrap(Wrap{trim:false}),parts[0]);
-        let horizontal = body.width >= 100;
         let cards = Layout::default()
             .direction(if horizontal {
                 Direction::Horizontal
@@ -496,6 +506,28 @@ fn render(frame: &mut Frame, app: &App) {
             Prompt::ConfirmPreset(_) => ("Replace starting choices?","This replaces the current starting choices. Your plan and notes\nare kept for review, and old checks are marked pending.\nA backup of your previous record stays in this RAM session.\n\nY  Replace choices       Esc / N  Keep current choices".into()),
         };
         frame.render_widget(paragraph(text, title, 0), rect);
+    }
+    if app.console_palette {
+        // Linux virtual consoles understand sixteen colors, not RGB escapes.
+        // Translate the complete frame so labels and selected cards stay legible.
+        for cell in &mut frame.buffer_mut().content {
+            let style = cell.style();
+            cell.set_style(style.fg(console_color(cell.fg)).bg(console_color(cell.bg)));
+        }
+    }
+}
+
+fn console_color(color: Color) -> Color {
+    match color {
+        BG | PANEL => Color::Black,
+        BORDER => Color::Cyan,
+        TEXT => Color::Gray,
+        MUTED => Color::DarkGray,
+        ACCENT => Color::LightCyan,
+        GREEN => Color::LightGreen,
+        AMBER => Color::LightYellow,
+        Color::Rgb(22, 43, 66) | Color::Rgb(28, 53, 76) => Color::Blue,
+        other => other,
     }
 }
 
@@ -796,6 +828,21 @@ mod tests {
         let text = format!("{:?}", terminal.backend().buffer());
         assert!(text.contains("Guided setup"));
         assert!(text.contains("Direct agent conversation"));
+    }
+    #[test]
+    fn linux_console_uses_legible_sixteen_color_selection() {
+        let mut app = app();
+        app.console_palette = true;
+        let mut terminal = Terminal::new(TestBackend::new(160, 50)).unwrap();
+        terminal.draw(|f| render(f, &app)).unwrap();
+        let cells = &terminal.backend().buffer().content;
+        assert!(
+            cells
+                .iter()
+                .all(|c| !matches!(c.fg, Color::Rgb(..)) && !matches!(c.bg, Color::Rgb(..)))
+        );
+        assert!(cells.iter().any(|c| c.bg == Color::Blue));
+        assert!(cells.iter().any(|c| c.fg == Color::LightCyan));
     }
     #[test]
     fn every_page_renders_on_console_and_small_terminals() {

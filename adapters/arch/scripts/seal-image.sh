@@ -15,11 +15,18 @@ kernel="${values[3]}"
 codex_version="${values[5]}"
 workspace="/repo/.build/remaster"
 root="$workspace/root"
+if mountpoint -q "$root"; then
+    echo 'The extracted root must be unmounted before sealing.' >&2
+    exit 1
+fi
 rm -f "$workspace/airootfs.sfs"
 mksquashfs "$root" "$workspace/airootfs.sfs" -noappend -comp zstd -Xcompression-level 6 -mem 512M -processors "${BUILD_JOBS:-2}"
 # Both are in the same staging filesystem. Avoid holding two full copies of
 # the sealed root while assembling the ISO; later builds replace the tree.
 ln -f "$workspace/airootfs.sfs" "$workspace/iso/arch/x86_64/airootfs.sfs"
+# The successfully sealed filesystem is now authoritative. Drop the disposable
+# extracted tree before writing another full image on space-constrained hosts.
+rm -rf -- "$root"
 rm -f "$workspace/iso/arch/x86_64/airootfs.sfs.cms.sig"
 (cd "$workspace/iso/arch/x86_64"; sha512sum airootfs.sfs > airootfs.sha512)
 output="/repo/dist/arch-agent-${values[0]#archlinux-}"

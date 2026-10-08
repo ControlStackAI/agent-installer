@@ -31,8 +31,12 @@ gpg --homedir "$workspace/gnupg" --status-fd 1 --verify "$iso.sig" "$iso" > "$wo
 grep -Eq "^\[GNUPG:\] VALIDSIG [0-9A-F]+ .*${values[1]}$|^\[GNUPG:\] VALIDSIG ${values[1]} " "$workspace/iso-signature.txt"
 
 xorriso -osirrox on -indev "$iso" -extract / "$workspace/iso" -extract_boot_images "$workspace/boot-images"
+# The appended-partition copies duplicate the El Torito EFI image used below.
+rm -f "$workspace/boot-images/mbr_part2_efi.img" "$workspace/boot-images/gpt_part3_efi.img"
 chmod -R u+w "$workspace/iso"
 unsquashfs -processors "${BUILD_JOBS:-2}" -d "$workspace/root" "$workspace/iso/arch/x86_64/airootfs.sfs"
+# A new sealed filesystem replaces this stock copy after customization.
+rm -f "$workspace/iso/arch/x86_64/airootfs.sfs"
 root="$workspace/root"
 # pacman's space checks require the chroot itself to be a mount point.
 mount --bind "$root" "$root"

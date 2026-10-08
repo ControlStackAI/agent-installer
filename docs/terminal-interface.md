@@ -46,6 +46,9 @@ for the original basic console. Non-interactive/dumb terminals use the text path
 A TUI startup failure also falls back to that path. Other live consoles remain
 available for troubleshooting.
 
+The welcome layout adapts to console size. Linux virtual consoles use a legible
+sixteen-color palette; terminals supporting RGB use the full dark theme.
+
 `agent-installer-tui --preview` explores the interface without running system
 actions. `agent-installer-tui --render 100 32` renders a deterministic example;
 `--screen presets` previews the preset page. These examples are explicitly
