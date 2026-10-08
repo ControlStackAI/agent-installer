@@ -521,8 +521,8 @@ fn console_color(color: Color) -> Color {
     match color {
         BG | PANEL => Color::Black,
         BORDER => Color::Cyan,
-        TEXT => Color::Gray,
-        MUTED => Color::DarkGray,
+        TEXT => Color::White,
+        MUTED => Color::Gray,
         ACCENT => Color::LightCyan,
         GREEN => Color::LightGreen,
         AMBER => Color::LightYellow,
@@ -831,6 +831,8 @@ mod tests {
     }
     #[test]
     fn linux_console_uses_legible_sixteen_color_selection() {
+        assert_eq!(console_color(MUTED), Color::Gray);
+        assert_eq!(console_color(TEXT), Color::White);
         let mut app = app();
         app.console_palette = true;
         let mut terminal = Terminal::new(TestBackend::new(160, 50)).unwrap();
