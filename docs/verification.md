@@ -23,6 +23,23 @@ VM installation tests, removed-media reboots, rollback/recovery tests and then
 explicitly approved hardware qualification. See capability declarations in
 profiles/*.json. Tests and build success do not change these declarations.
 
+## Agent-directed support updates, 2026-10-07
+
+The support additions pass 44 unit tests (30 shared, 14 Arch input-policy),
+including custom choices outside preset desktops, nested overrides, explicit
+handoff review, rejection of secrets/duplicate keys/symlinks/special files,
+private file permissions, stale verification on import and live/chroot boot
+distinctions. Read-only inventory was exercised locally. The disposable Arch
+overlay includes the helper, presets and automatically loaded workflow; the
+actual NixOS core package builds and the live-image configuration evaluates.
+
+These are support-tool and packaging checks. They are not new ISO boot receipts,
+a rebooted target installation, hardware qualification or a prebuilt graphical
+desktop. Presets guide agent-created sessions. Import/export preserves only the
+reviewed JSON record; installed agent provisioning and fresh sign-in must be
+included in the owner's installation plan. Existing ISOs require rebuilding to
+include these changes. Recovery guidance is not an automated recovery executor.
+
 ## Recorded development checks, 2026-10-06
 
 - Shared core plus Arch input policy: 30 unit tests passed. [Hosted source/package

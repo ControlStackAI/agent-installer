@@ -28,7 +28,7 @@ chroot detection. The image's default target is recorded separately. The agent
 can discuss another target but must inspect required native tools and research
 the official installation process. A chroot never proves an installed disk boot.
 
-Codex receives the common role, selected profile and observed facts as a global
+Codex receives the common role, agent-directed workflow, selected profile and observed facts as a global
 AGENTS.md inside its private live CODEX_HOME. It is instructions, not an enforced
 disk policy. The work directory holds non-secret plans, not a credential handoff.
 See [Codex instruction discovery](https://learn.chatgpt.com/docs/agent-configuration/agents-md).
@@ -38,3 +38,18 @@ identities and guarded executors, with payload validation before erasure and a
 real installed-system reboot test. Persistent OpenClaw services, authentication,
 memory, backups and system permissions are developed in a separate repository.
 Only sanitized installation records should cross that boundary.
+
+`presets/desktop.json` supplies editable starting choices. Custom values are
+JSON data; objects merge recursively and lists replace. No desktop allowlist
+restricts advanced choices. Presets do not pick disks or account credentials and
+do not claim an implemented/qualified desktop session.
+
+`core.assistant` provides the `agent-support` CLI: inventory, presets, structured
+review, explicit handoff export/import and read-only verification evidence.
+Handoffs contain one bounded schema-1 JSON record, not runtime state. Import
+resets old verification results and never evaluates code or writes agent
+instructions. Its source is untrusted; approval is never transferable. Secret
+pattern rejection supplements, but cannot replace, review of free text before
+an owner-approved persistent save. Verification always returns needs-review;
+media removal, functional hardware and recovery need separate testing. See
+[the workflow](agent-directed-workflow.md).

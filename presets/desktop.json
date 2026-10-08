@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "presets": [
+    {
+      "id": "familiar",
+      "name": "Familiar desktop",
+      "description": "A traditional desktop with an application menu, taskbar and graphical settings. A good starting point if you are unsure.",
+      "defaults": {"desktop": "plasma", "filesystem": "zfs", "kernel_policy": "newest-released-zfs-compatible", "applications": ["browser", "file-manager", "terminal"], "accessibility": {}, "appearance": {}}
+    },
+    {
+      "id": "simple",
+      "name": "Simple desktop",
+      "description": "GNOME with a focused workspace and fewer visible controls.",
+      "defaults": {"desktop": "gnome", "filesystem": "zfs", "kernel_policy": "newest-released-zfs-compatible", "applications": ["browser", "file-manager", "terminal"], "accessibility": {}, "appearance": {}}
+    },
+    {
+      "id": "hyprland",
+      "name": "Hyprland with Quickshell",
+      "description": "A tiling workspace with three floating islands and a searchable, icon-based Quickshell launcher. The agent configures it for the selected distro.",
+      "defaults": {"desktop": "hyprland-quickshell", "filesystem": "zfs", "kernel_policy": "newest-released-zfs-compatible", "applications": ["browser", "file-manager", "terminal"], "accessibility": {}, "appearance": {"panel": "three-floating-islands", "launcher": "quickshell-search-with-icons", "colors": "dark-blue", "panel_height": 32}}
+    },
+    {
+      "id": "minimal",
+      "name": "Minimal or server",
+      "description": "A command-line system without a desktop. Add only what you need.",
+      "defaults": {"desktop": "none", "filesystem": "zfs", "kernel_policy": "newest-released-zfs-compatible", "applications": [], "accessibility": {}, "appearance": {}}
+    },
+    {
+      "id": "custom",
+      "name": "Start from your own choices",
+      "description": "No desktop or filesystem is selected. Tell the agent what to use, or supply your own JSON choices.",
+      "defaults": {}
+    }
+  ]
+}

@@ -108,7 +108,7 @@ def main():
     # auth files, or other files an operator keeps beside the source tree.
     for name in ('scripts', 'live', 'config', 'inputs.lock.json'):
         command.extend(['--mount', f'type=bind,src={ROOT / name},dst=/repo/{name},readonly'])
-    for name in ('core', 'runtimes', 'identity', 'profiles', 'tests'):
+    for name in ('core', 'runtimes', 'identity', 'profiles', 'presets', 'tests'):
         command.extend(['--mount', f'type=bind,src={ROOT.parent.parent / name},dst=/shared/{name},readonly'])
     for name in ('.build', 'dist'):
         command.extend(['--mount', f'type=bind,src={ROOT / name},dst=/repo/{name}'])

@@ -18,6 +18,7 @@ onboarding and identity. Hardware support still needs broader testing.
 core/               shared onboarding, readiness and environment detection
 identity/           friendly local installer role and data-preservation guidance
 profiles/           distro facts, capability declarations and agent instructions
+presets/            editable starting choices; custom setups remain unrestricted
 runtimes/codex/      Codex login, launch and independently pinned upstream bundle
 adapters/arch/      signed Arch ISO remaster, dated packages and matching ZFS
 adapters/nixos/     reusable NixOS module and reproducible live-image configuration
@@ -56,9 +57,27 @@ you sign in on a phone or another computer. Browser login and hidden API-key
 input are also available; API billing is separate. Successful sign-in starts
 the local assistant in the same flow. A troubleshooting shell remains available.
 
-Credentials and session notes stay in private RAM storage. They disappear at
-reboot. The assistant asks before saving non-secret continuation notes elsewhere
-and must present a concrete disk plan before requesting erasure approval.
+Credentials stay in private RAM storage and disappear at reboot. Session notes
+also stay in RAM unless you approve saving a reviewed, non-secret handoff file.
+The assistant must present a concrete disk plan before requesting erasure approval.
+
+## Your choices, with help when you want it
+
+If you are unsure, the assistant can recommend a familiar desktop, a simple
+desktop, Hyprland with Quickshell, or a minimal/server setup. These presets are
+editable starting points. Advanced users can customize every choice, provide
+their own configuration, or start from scratch; an unlisted desktop or option
+is not automatically unsupported. The agent checks actual distro and hardware
+requirements before proceeding. Presets describe the desired system; they are
+not prebuilt desktop sessions or installation executors.
+
+The local `agent-support` tool supplies read-only hardware inventory, editable
+choices, installation reviews, non-secret reboot handoffs and post-install
+verification evidence. The assistant uses these tools for you. Recovery starts
+read-only and requires a reviewed plan before changes. Imported handoffs are
+untrusted historical context; verification and disk approval must be checked
+again on the current device. Saving a handoff does not automatically install or
+start a resident agent. See [the agent-directed workflow](docs/agent-directed-workflow.md).
 
 ## Building and checking
 

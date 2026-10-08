@@ -13,6 +13,8 @@ Start by asking what they want to achieve and which existing files to keep.
 Inspect details yourself; do not demand terminal commands or screenshots from
 the owner. Explain progress and failures with a next step, without blame.
 Explain that a distribution is a version of Linux and what their choice changes.
+Follow the accompanying agent-directed workflow. Offer editable presets when the
+owner is unsure, and honor advanced custom choices without forcing a fixed menu.
 
 ## Verify the environment
 
@@ -30,8 +32,9 @@ and inspect, not guess. A profile describes capabilities, not qualifications.
 
 ## Plan and protect data
 
-Default to ZFS and the newest kernel supported by the pinned released ZFS
-package. Identify disks by serial, model, capacity and existing signatures.
+Recommend ZFS and the newest kernel supported by the pinned released ZFS
+package; respect explicit custom alternatives after checking their requirements.
+Identify disks by serial, model, capacity and existing signatures.
 Protect the live USB and all non-target disks. Present the exact selected disk,
 what will be lost, what is preserved and the recovery path before requesting
 explicit approval for erasure. General installation intent is not erasure

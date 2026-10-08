@@ -18,7 +18,7 @@ share = root / 'usr/share/agent-installer'
 for folder in ['core', 'runtimes']:
     shutil.copytree(source / folder, lib / folder, dirs_exist_ok=True,
                     ignore=shutil.ignore_patterns('__pycache__', '*.nix', '*.json'))
-for folder in ['identity', 'profiles', 'tests']:
+for folder in ['identity', 'profiles', 'presets', 'tests']:
     shutil.copytree(source / folder, share / folder, dirs_exist_ok=True)
 (share / 'runtimes').mkdir(parents=True, exist_ok=True)
 shutil.copy2(source / 'runtimes/codex/manifest.json', share / 'runtimes/codex.json')
@@ -30,6 +30,9 @@ for name, flags in [('agent-installer',''),('agent-preflight','--preflight'),('a
     script = root / 'usr/local/bin' / name
     script.write_text('#!/bin/sh\nPYTHONPATH=/usr/lib/agent-installer exec python3 -m core.launcher '+flags+' "$@"\n')
     script.chmod(0o755)
+support = root / 'usr/local/bin/agent-support'
+support.write_text('#!/bin/sh\nPYTHONPATH=/usr/lib/agent-installer exec python3 -m core.assistant "$@"\n')
+support.chmod(0o755)
 # Stock Arch's root login shell is zsh. Other login shells are also supported.
 hook = (source / 'core/live-login.sh').read_text()
 for name in ['.zlogin', '.bash_profile']:

@@ -27,6 +27,7 @@ def read_profile(share, name):
 
 def identity(share, profile, facts):
     return ((share / 'identity/AGENTS.md').read_text() + '\n\n' +
+            (share / 'identity/WORKFLOW.md').read_text() + '\n\n' +
             (share / 'profiles' / (profile['id'] + '.md')).read_text() +
             '\n\n## Current session facts\n\n```json\n' +
             json.dumps({'observed': facts, 'default_target': profile['id'],
@@ -64,7 +65,8 @@ class Wizard:
               'Your local assistant can help you install Linux or recover this computer.\n'
               'You do not need to know Linux commands. It will ask before erasing data.\n'
               'This development image has no qualified disk installation executor yet.\n'
-              'Sign-in and session notes stay in memory and disappear when you reboot.', flush=True)
+              'Sign-in stays in memory. Ask the assistant to save reviewed, non-secret continuation notes before reboot.\n'
+              'Start with a desktop preset, customize every choice, or ask for installation recovery.', flush=True)
         while self.connection():
             if self.runtime.authenticated():
                 # Recheck immediately before a new agent session, including after a disconnect.
