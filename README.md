@@ -1,13 +1,27 @@
 # Agent Installer
 
-A Linux installer with an assistant running on the computer you are setting up.
-Boot from USB, connect to the internet, sign in to Codex, and explain what you
-want in ordinary language. You do not need to relay terminal output to an agent
-on another device.
+**Infrastructure that onboards itself.**
+
+Agent Installer is an **agentic deployment environment for Linux**. Boot a
+machine into an environment where an agent has the tools, system access, and
+distribution knowledge to inspect the hardware, help plan your deployment,
+and carry out approved work directly on that machine.
+
+Describe the system you want: a familiar desktop, a custom workstation, or a
+minimal server. The agent helps turn that intent into a concrete configuration
+and a reviewable plan. Boot from USB, connect to the internet, sign in to Codex,
+and start the conversation.
 
 Choose **Guided setup** for editable desktop presets and a dashboard, or
 **Direct agent conversation** to start by talking. Both use the same assistant
 and connection checks.
+
+- **Machine-aware:** the agent identifies the live distribution and can inspect
+  the hardware itself, with no need to relay terminal output from another device.
+- **Your infrastructure, your choices:** start with an editable preset or bring
+  your own configuration. Beginners get guidance; advanced users keep control.
+- **Continuity across boots:** save reviewed, non-secret deployment notes and
+  choices, then resume with fresh checks on the current machine.
 
 ![Guided setup and direct conversation on the Arch live console](docs/images/live-welcome.png)
 
@@ -18,7 +32,7 @@ and recovery have not yet been validated. The assistant can run real system
 commands: review its disk and data-preservation plan before authorizing changes.
 Choosing a preset does not authorize erasing a disk.
 
-## Try it
+## Start a deployment session
 
 You need a compatible computer, a USB drive with room for the image, internet
 access, and a ChatGPT account with Codex access or an OpenAI API key. Device-code
@@ -69,7 +83,7 @@ the full terminal; the dashboard returns when you exit them.
 
 ### 4. Connect and sign in
 
-The installer checks Ethernet or an existing connection and offers Wi-Fi setup
+The environment checks Ethernet or an existing connection and offers Wi-Fi setup
 through NetworkManager. Internet access, a synchronized clock, and matching
 live ZFS support must be ready before sign-in or starting Codex.
 
@@ -213,8 +227,8 @@ checks, which also require QEMU, Tesseract, and OVMF for UEFI.
 
 ## Extend it to another distribution
 
-The shared workflow is separate from distribution-specific image building and
-installation guidance:
+The deployment environment combines a shared agent workflow with
+distribution-specific image building and installation guidance:
 
 | Location | Responsibility |
 | --- | --- |
